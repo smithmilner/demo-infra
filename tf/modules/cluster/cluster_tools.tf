@@ -10,3 +10,16 @@ resource "helm_release" "ingress_nginx_chart" {
     value = "true"
   }
 }
+
+resource "helm_release" "cert_manager" {
+  name             = "cert-manager"
+  namespace        = "cert-manager"
+  create_namespace = true
+  repository       = "https://charts.jetstack.io"
+  chart            = "cert-manager"
+  set {
+    name  = "installCRDs"
+    value = "true"
+  }
+
+}

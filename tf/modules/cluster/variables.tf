@@ -14,6 +14,17 @@ variable "region" {
   default     = "tor1"
 }
 
+variable "cluster_tags" {
+  description = "The tags applied to the cluster"
+  type        = list(string)
+  default     = []
+}
+
+variable "cluster_node_pool_tags" {
+  description = "The tags applied to the cluster's node pool"
+  type        = list(string)
+  default     = []
+}
 variable "min_nodes" {
   description = "The minimum number of nodes in the default pool"
   type        = number
