@@ -2,7 +2,7 @@
 resource "digitalocean_kubernetes_cluster" "default_cluster" {
   name     = var.cluster_name
   region   = var.region
-  version  = "1.22.7-do.0"
+  version  = "1.22.8-do.0"
   tags     = concat(var.cluster_tags, ["terraform"])
   vpc_uuid = digitalocean_vpc.default_vpc.id
   node_pool {
