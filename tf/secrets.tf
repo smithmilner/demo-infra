@@ -3,6 +3,9 @@
 
 resource "kubernetes_secret" "dev_cluster" {
   provider = kubernetes.prod
+  depends_on = [
+    helm_release.argocd_chart
+  ]
   metadata {
     namespace   = "argocd"
     name        = "demo-dev-secret"
@@ -27,6 +30,9 @@ resource "kubernetes_secret" "dev_cluster" {
 
 resource "kubernetes_secret" "stage_cluster" {
   provider = kubernetes.prod
+  depends_on = [
+    helm_release.argocd_chart
+  ]
   metadata {
     namespace   = "argocd"
     name        = "demo-stage-secret"
