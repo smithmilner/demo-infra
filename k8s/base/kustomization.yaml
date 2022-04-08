@@ -3,4 +3,4 @@ kind: Kustomization
 
 resources:
   - demo-depl.yaml
-  - ingress-srv.yaml
+  - ingress-svc.yaml

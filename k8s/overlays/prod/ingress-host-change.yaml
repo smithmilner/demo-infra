@@ -4,13 +4,13 @@ metadata:
   name: ingress-service
 spec:
   rules:
-  - host: smithmilner.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: "/"
-        backend:
-          service:
-            name: demo-svc
-            port:
-              number: 3000
+    - host: smithmilner.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: demo-svc
+                port:
+                  number: 3000
