@@ -18,3 +18,13 @@ resource "digitalocean_kubernetes_cluster" "default_cluster" {
     digitalocean_vpc.default_vpc
   ]
 }
+
+data "kubernetes_service" "load_balancer" {
+  depends_on = [
+    helm_release.ingress_nginx_chart
+  ]
+  metadata {
+    name      = "ingress-nginx-controller"
+    namespace = "ingress-nginx"
+  }
+}

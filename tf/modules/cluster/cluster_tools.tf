@@ -5,10 +5,17 @@ resource "helm_release" "ingress_nginx_chart" {
   create_namespace = true
   repository       = "https://kubernetes.github.io/ingress-nginx"
   chart            = "ingress-nginx"
+
+  set {
+    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/do-loadbalancer-name"
+    value = "${var.cluster_name}-lb"
+  }
+
   set {
     name  = "controller.publishService.enabled"
     value = "true"
   }
+
 }
 
 resource "helm_release" "cert_manager" {
