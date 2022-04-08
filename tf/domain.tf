@@ -12,9 +12,9 @@ resource "digitalocean_record" "prod" {
 
 resource "digitalocean_record" "www" {
   domain = digitalocean_domain.default.id
-  type   = "A"
+  type   = "CNAME"
   name   = "www"
-  value  = module.prod_cluster.load_balancer_ip
+  value  = "@"
 }
 
 resource "digitalocean_record" "argocd" {
