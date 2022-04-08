@@ -5,6 +5,8 @@ metadata:
   name: argocd-ingress-service
   labels:
     name: argocd-ingress-service
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
   rules:
@@ -17,4 +19,4 @@ spec:
           service:
             name: argocd-server
             port:
-              number: 443
+              number: 80
