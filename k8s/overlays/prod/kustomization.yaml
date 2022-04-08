@@ -4,9 +4,6 @@ kind: Kustomization
 bases:
   - ../../base
 
-resources:
-  - argocd-ingress-svc.yaml
-
 patchesStrategicMerge:
   - demo-set-env.yaml
   - ingress-host-change.yaml
