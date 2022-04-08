@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: demo
-          image: ghcr.io/smithmilner/demo/app
+          image: ghcr.io/smithmilner/demo/app:latest
           env:
             - name: NAME
               value: 'Smith'

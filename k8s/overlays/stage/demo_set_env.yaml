@@ -14,6 +14,7 @@ spec:
     spec:
       containers:
         - name: demo
+          image: ghcr.io/smithmilner/demo/app:1.0
           env:
             - name: NAME
               value: 'Nik'
