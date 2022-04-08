@@ -12,6 +12,10 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.0.1"
     }
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.7.0"
+    }
   }
 }
 
@@ -80,4 +84,12 @@ provider "helm" {
       module.prod_cluster.cluster.kube_config[0].cluster_ca_certificate
     )
   }
+}
+
+provider "kubectl" {
+  alias                  = "prod"
+  host                   = module.prod_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(module.prod_cluster.cluster.kube_config[0].cluster_ca_certificate)
+  token                  = module.prod_cluster.cluster.kube_config[0].token
+  load_config_file       = false
 }
