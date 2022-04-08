@@ -5,4 +5,5 @@ bases:
   - ../../base
 
 patchesStrategicMerge:
-  - demo_set_env.yaml
+  - demo-set-env.yaml
+  - ingress-host-change.yaml
