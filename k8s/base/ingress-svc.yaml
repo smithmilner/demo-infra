@@ -6,6 +6,10 @@ metadata:
     name: ingress-service
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+      - dev.smithmilner.com
+      secretName: demo-tls
   rules:
   - host: dev.smithmilner.com
     http:

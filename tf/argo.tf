@@ -33,8 +33,13 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+    - argocd.smithmilner.com
+    secretName: argocd-tls
   rules:
   - host: argocd.smithmilner.com
     http:

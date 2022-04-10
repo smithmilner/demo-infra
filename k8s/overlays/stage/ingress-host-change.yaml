@@ -3,6 +3,10 @@ kind: Ingress
 metadata:
   name: ingress-service
 spec:
+  tls:
+    - hosts:
+      - stage.smithmilner.com
+      secretName: demo-stage-tls
   rules:
   - host: stage.smithmilner.com
     http:

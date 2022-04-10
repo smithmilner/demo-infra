@@ -5,6 +5,10 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
 spec:
+  tls:
+    - hosts:
+      - smithmilner.com
+      secretName: demo-prod-tls
   rules:
     - host: smithmilner.com
       http:
