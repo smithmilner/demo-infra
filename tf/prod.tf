@@ -5,6 +5,7 @@ module "prod_cluster" {
   providers = {
     digitalocean = digitalocean,
     kubernetes   = kubernetes.prod,
-    helm         = helm.prod
+    helm         = helm.prod,
+    kubectl      = kubectl.prod
   }
 }

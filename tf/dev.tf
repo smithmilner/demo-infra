@@ -5,6 +5,7 @@ module "dev_cluster" {
   providers = {
     digitalocean = digitalocean,
     kubernetes   = kubernetes.dev,
-    helm         = helm.dev
+    helm         = helm.dev,
+    kubectl      = kubectl.dev
   }
 }

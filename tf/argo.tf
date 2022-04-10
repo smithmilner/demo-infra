@@ -61,6 +61,8 @@ kind: Application
 metadata:
   name: demo-prod
   namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -89,6 +91,8 @@ kind: Application
 metadata:
   name: demo-stage
   namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -117,6 +121,8 @@ kind: Application
 metadata:
   name: demo-dev
   namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:

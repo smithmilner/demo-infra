@@ -29,3 +29,26 @@ resource "helm_release" "cert_manager" {
     value = "true"
   }
 }
+
+resource "kubectl_manifest" "cert_issuer" {
+  depends_on = [
+    helm_release.cert_manager
+  ]
+
+  yaml_body = <<YAML
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    email: smithmilner@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-private-key
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+YAML
+}

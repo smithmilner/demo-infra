@@ -44,6 +44,14 @@ provider "helm" {
   }
 }
 
+provider "kubectl" {
+  alias                  = "dev"
+  host                   = module.dev_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(module.dev_cluster.cluster.kube_config[0].cluster_ca_certificate)
+  token                  = module.dev_cluster.cluster.kube_config[0].token
+  load_config_file       = false
+}
+
 provider "kubernetes" {
   alias = "stage"
   host  = module.stage_cluster.cluster.endpoint
@@ -63,6 +71,14 @@ provider "helm" {
       module.stage_cluster.cluster.kube_config[0].cluster_ca_certificate
     )
   }
+}
+
+provider "kubectl" {
+  alias                  = "stage"
+  host                   = module.stage_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(module.stage_cluster.cluster.kube_config[0].cluster_ca_certificate)
+  token                  = module.stage_cluster.cluster.kube_config[0].token
+  load_config_file       = false
 }
 
 # Prod providers

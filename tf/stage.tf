@@ -5,6 +5,7 @@ module "stage_cluster" {
   providers = {
     digitalocean = digitalocean,
     kubernetes   = kubernetes.stage,
-    helm         = helm.stage
+    helm         = helm.stage,
+    kubectl      = kubectl.stage
   }
 }
