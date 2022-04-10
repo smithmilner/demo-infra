@@ -4,6 +4,8 @@ metadata:
   name: ingress-service
   labels:
     name: ingress-service
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   ingressClassName: nginx
   tls:
