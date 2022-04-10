@@ -33,7 +33,7 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-    cert-manager.io/cluster-issuer: letsencrypt
+    cert-manager.io/cluster-issuer: letsencrypt-argocd
 spec:
   ingressClassName: nginx
   tls:
@@ -53,6 +53,31 @@ spec:
               number: 443
 YAML
 }
+
+resource "kubectl_manifest" "cert_issuer_argocd" {
+  provider = kubectl.prod
+  depends_on = [
+    module.prod_cluster.cluster_tool_cert_manager
+  ]
+
+  yaml_body = <<YAML
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-argocd
+spec:
+  acme:
+    email: smithmilner@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-private-key
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+YAML
+}
+
 
 resource "kubectl_manifest" "application_prod" {
   provider = kubectl.prod
