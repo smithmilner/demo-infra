@@ -20,6 +20,13 @@ spec:
               value: 'Smith'
             - name: APP_ENV
               value: 'dev'
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "64M"
+            limits:
+              cpu: "500m"
+              memory: "128M"
 ---
 apiVersion: v1
 kind: Service
