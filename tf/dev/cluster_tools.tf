@@ -8,7 +8,7 @@ resource "helm_release" "ingress_nginx_chart" {
 
   set {
     name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/do-loadbalancer-name"
-    value = "${var.cluster_name}-lb"
+    value = "${var.environment_name}-lb"
   }
 
   set {
@@ -34,6 +34,8 @@ resource "kubectl_manifest" "cert_issuer" {
   depends_on = [
     helm_release.cert_manager
   ]
+
+  wait_for_rollout = false
 
   yaml_body = <<YAML
 apiVersion: cert-manager.io/v1

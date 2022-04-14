@@ -3,9 +3,20 @@
 #   type        = string
 # }
 
-variable "cluster_name" {
-  description = "The name of the kubernetes cluster to create"
+variable "environment_name" {
+  description = "The name of the environment to create. Must be snake case eg. demo-dev"
   type        = string
+}
+
+variable "environment_type" {
+  description = "The project environment. Valid options are Development, Staging, Production."
+  type        = string
+}
+
+variable "environment_description" {
+  description = "The project description."
+  type        = string
+  default     = "Terraform project"
 }
 
 variable "region" {

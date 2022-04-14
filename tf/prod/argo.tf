@@ -1,14 +1,9 @@
 resource "helm_release" "argocd_chart" {
-  provider         = helm.prod
   name             = "argocd"
   namespace        = "argocd"
   create_namespace = true
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
-
-  depends_on = [
-    module.prod_cluster.cluster
-  ]
 }
 
 # Migrated from "kubernetes_manifest" to "kubectl_manifest" because
@@ -16,10 +11,11 @@ resource "helm_release" "argocd_chart" {
 # terraforms plan phase which is impossible if we're also setting up the
 # cluster in the same terraform process.
 resource "kubectl_manifest" "argocd_ingress" {
-  provider = kubectl.prod
   depends_on = [
-    module.prod_cluster.cluster_tool_ingress
+    helm_release.ingress_nginx_chart
   ]
+
+  wait_for_rollout = false
 
   yaml_body = <<YAML
 apiVersion: networking.k8s.io/v1
@@ -55,10 +51,11 @@ YAML
 }
 
 resource "kubectl_manifest" "cert_issuer_argocd" {
-  provider = kubectl.prod
   depends_on = [
-    module.prod_cluster.cluster_tool_cert_manager
+    helm_release.cert_manager
   ]
+
+  wait_for_rollout = false
 
   yaml_body = <<YAML
 apiVersion: cert-manager.io/v1
@@ -80,10 +77,11 @@ YAML
 
 
 resource "kubectl_manifest" "application_prod" {
-  provider = kubectl.prod
   depends_on = [
     helm_release.argocd_chart
   ]
+
+  wait_for_rollout = false
 
   yaml_body = <<YAML
 apiVersion: argoproj.io/v1alpha1
@@ -110,10 +108,11 @@ YAML
 }
 
 resource "kubectl_manifest" "application_stage" {
-  provider = kubectl.prod
   depends_on = [
     helm_release.argocd_chart
   ]
+
+  wait_for_rollout = false
 
   yaml_body = <<YAML
 apiVersion: argoproj.io/v1alpha1
@@ -130,7 +129,7 @@ spec:
     targetRevision: HEAD
     path: k8s/overlays/stage
   destination:
-    server: ${module.stage_cluster.cluster.endpoint}
+    server: ${data.digitalocean_kubernetes_cluster.stage_cluster.endpoint}
     namespace: default
   syncPolicy:
     automated:
@@ -140,10 +139,11 @@ YAML
 }
 
 resource "kubectl_manifest" "application_dev" {
-  provider = kubectl.prod
   depends_on = [
     helm_release.argocd_chart
   ]
+
+  wait_for_rollout = false
 
   yaml_body = <<YAML
 apiVersion: argoproj.io/v1alpha1
@@ -160,11 +160,67 @@ spec:
     targetRevision: HEAD
     path: k8s/overlays/dev
   destination:
-    server: ${module.dev_cluster.cluster.endpoint}
+    server: ${data.digitalocean_kubernetes_cluster.dev_cluster.endpoint}
     namespace: default
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
 YAML
+}
+
+# Cluster secrets for DEV and STAGE are added to the production cluster.
+# This allows argoCD running on the production cluster to deploy to dev and stage.
+
+resource "kubernetes_secret" "stage_cluster" {
+  depends_on = [
+    helm_release.argocd_chart
+  ]
+  metadata {
+    namespace   = "argocd"
+    name        = "demo-stage-secret"
+    annotations = {}
+    labels = {
+      "argocd.argoproj.io/secret-type" = "cluster"
+    }
+  }
+  type = "Opaque"
+  data = {
+    name   = "demo-stage"
+    server = data.digitalocean_kubernetes_cluster.stage_cluster.endpoint
+    config = jsonencode({
+      bearerToken = data.digitalocean_kubernetes_cluster.stage_cluster.kube_config[0].token
+      tlsClientConfig = {
+        insecure = false
+        caData   = data.digitalocean_kubernetes_cluster.stage_cluster.kube_config[0].cluster_ca_certificate
+      }
+    })
+  }
+}
+
+resource "kubernetes_secret" "dev_cluster" {
+  depends_on = [
+    helm_release.argocd_chart
+  ]
+
+  metadata {
+    namespace   = "argocd"
+    name        = "demo-dev-secret"
+    annotations = {}
+    labels = {
+      "argocd.argoproj.io/secret-type" = "cluster"
+    }
+  }
+  type = "Opaque"
+  data = {
+    name   = "demo-dev"
+    server = data.digitalocean_kubernetes_cluster.dev_cluster.endpoint
+    config = jsonencode({
+      bearerToken = data.digitalocean_kubernetes_cluster.dev_cluster.kube_config[0].token
+      tlsClientConfig = {
+        insecure = false
+        caData   = data.digitalocean_kubernetes_cluster.dev_cluster.kube_config[0].cluster_ca_certificate
+      }
+    })
+  }
 }
