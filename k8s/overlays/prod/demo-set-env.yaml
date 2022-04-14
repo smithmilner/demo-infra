@@ -17,6 +17,6 @@ spec:
           image: ghcr.io/smithmilner/demo/app:1.0.1
           env:
             - name: NAME
-              value: 'Tovi'
+              value: 'Amy'
             - name: APP_ENV
               value: 'prod'
