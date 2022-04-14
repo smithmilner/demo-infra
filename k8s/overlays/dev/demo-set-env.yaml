@@ -16,6 +16,6 @@ spec:
         - name: demo
           env:
             - name: NAME
-              value: 'Amy'
+              value: 'Iain'
             - name: APP_ENV
               value: 'dev'
